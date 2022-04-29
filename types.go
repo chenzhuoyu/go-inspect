@@ -4,7 +4,8 @@ import (
     `reflect`
 )
 
-// FindType finds the type by name (such as "runtime.g"), it returns nil if not found.
+// FindType finds the type by name (such as "runtime.g") even if the type is
+// not exported. This function returns nil if the type does not exist.
 func FindType(name string) reflect.Type {
     var ok bool
     var rt reflect.Type
