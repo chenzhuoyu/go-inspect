@@ -7,7 +7,11 @@ import (
 
 func TestTypes(t *testing.T) {
     EnumerateTypes(func(t reflect.Type) bool {
-        println(t.String())
+        if t.PkgPath() == "" || t.Name() == "" {
+            println(t.String())
+        } else {
+            println(t.PkgPath() + "." + t.Name())
+        }
         return true
     })
 }

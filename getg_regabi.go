@@ -18,6 +18,11 @@ var (
 	gfunc = asmgfunc()
 )
 
+// G returns the current goroutine handle.
+func G() *Goroutine {
+    return gfunc()
+}
+
 func mkptr(m uintptr) unsafe.Pointer {
     return *(*unsafe.Pointer)(unsafe.Pointer(&m))
 }
@@ -51,9 +56,4 @@ func asmgfunc() func() *Goroutine {
     /* build the function */
     fp := unsafe.Pointer(&mem)
     return *(*func() *Goroutine)(unsafe.Pointer(&fp))
-}
-
-// G returns the current goroutine handle.
-func G() *Goroutine {
-    return gfunc()
 }

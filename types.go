@@ -2,36 +2,36 @@ package inspect
 
 import (
     `reflect`
-    `unsafe`
 )
+
+// FindType finds the type by name (such as "runtime.g"), it returns nil if not found.
+func FindType(name string) reflect.Type {
+    var ok bool
+    var rt reflect.Type
+
+    /* attempt to find the type */
+    EnumerateTypes(func(t reflect.Type) bool {
+        t = dereftype(t)
+        rt, ok = t, t.PkgPath() + "." + t.Name() == name
+        return !ok
+    })
+
+    /* check if it exists */
+    if ok {
+        return rt
+    } else {
+        return nil
+    }
+}
 
 // EnumerateTypes finds all the types in the current executable, whether it's
 // exported or non-exported.
 // If callback returns false, the enumeration stops.
 func EnumerateTypes(callback func(reflect.Type) bool) {
-    v0 := struct{}{}
-    t0 := reflect.TypeOf(v0)
-    types, links := typelinks()
-
-    /* travel through all the classes */
-    for i, link := range links {
-        for _, class := range link {
-            rt := resolveTypeOff(types[i], class)
-            (*eface)(unsafe.Pointer(&t0)).ptr = rt
-
-            /* only struct pointers */
-            if t0.Kind() != reflect.Ptr || t0.Elem().Kind() != reflect.Struct {
-                continue
-            }
-
-            /* get the struct type */
-            tc := t0.Elem()
-            tn := tc.Name()
-            tp := tc.PkgPath()
-
-            /* discard empty class names */
-            if tn != "" && tp != "" {
-                if !callback(tc) {
+    if ty, lr := typelinks(); len(ty) != 0 {
+        for i, ln := range lr {
+            for _, off := range ln {
+                if !callback(typefrom(resolveTypeOff(ty[i], off))) {
                     break
                 }
             }

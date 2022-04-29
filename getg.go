@@ -2,7 +2,6 @@ package inspect
 
 import (
     `fmt`
-    `reflect`
     `unsafe`
 )
 
@@ -27,14 +26,11 @@ func (self *Goroutine) String() string {
 }
 
 func init() {
-    EnumerateTypes(func(t reflect.Type) bool {
-        if t.Name() != "g" || t.PkgPath() != "runtime" {
-            return true
-        } else if fp, ok := t.FieldByName("goid"); ok {
-            offset = fp.Offset
-            return false
-        } else {
-            panic("cannot get offset of 'goid' from 'runtime.g'")
-        }
-    })
+    if t := FindType("runtime.g"); t == nil {
+        panic("cannot find type 'runtime.g'")
+    } else if fp, ok := t.FieldByName("goid"); !ok {
+        panic("cannot get offset of 'goid' from 'runtime.g'")
+    } else {
+        offset = fp.Offset
+    }
 }
