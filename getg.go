@@ -25,7 +25,7 @@ func (self *Goroutine) String() string {
     return fmt.Sprintf("<goroutine %d>", self.ID())
 }
 
-// Labels returns the current Goroutine labels.
+// Labels returns the Goroutine labels.
 func (self *Goroutine) Labels() map[string]string {
     return **(**map[string]string)(unsafe.Pointer(uintptr(unsafe.Pointer(self)) + g_labels))
 }
