@@ -15,7 +15,7 @@ const (
 )
 
 var (
-	gfunc = asmgfunc()
+    gfunc = asmgfunc()
 )
 
 // G returns the current goroutine handle.
