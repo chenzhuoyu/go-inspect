@@ -1,4 +1,5 @@
 package inspect
+
 import (
     `fmt`
     `reflect`
