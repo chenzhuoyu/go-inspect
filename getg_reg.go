@@ -1,4 +1,4 @@
-// +build go1.17
+// +build go1.17 arm64,go1.16
 
 package inspect
 
@@ -9,7 +9,7 @@ import (
 )
 
 const (
-    _AP = syscall.MAP_ANON  | syscall.MAP_PRIVATE
+    _AP = syscall.MAP_ANON | syscall.MAP_PRIVATE
     _RX = syscall.PROT_READ | syscall.PROT_EXEC
     _RW = syscall.PROT_READ | syscall.PROT_WRITE
 )
@@ -45,7 +45,7 @@ func asmgfunc() func() *Goroutine {
     }
 
     /* fill the code */
-    buf := slice { mkptr(mem), int(nf), int(nf) }
+    buf := slice{mkptr(mem), int(nf), int(nf)}
     copy(*(*[]byte)(unsafe.Pointer(&buf)), gcode[:])
 
     /* protect the memory */
